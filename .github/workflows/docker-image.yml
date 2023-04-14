@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  REGISTRY: "registry.digitalocean.com/inventorymanagement-frontend"
+  REGISTRY: "registry.digitalocean.com/inventorymanagement"
   IMAGE_NAME: "inventorymanagement-frontend"
 
 #3
