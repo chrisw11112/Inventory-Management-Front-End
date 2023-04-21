@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-
 env:
   REGISTRY: "registry.digitalocean.com/inventorymanagement"
   IMAGE_NAME: "inventorymanagement-frontend"
