@@ -3,6 +3,8 @@
     <div class="item-view-div">
       <div v-if="this.state == 0">
           <h1 class="item-view-title">{{ this.title }}</h1>
+        <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
+        <br>
         <p class="item-view-p">Bin: {{ this.binNumber }}</p>
         <br>
         <p class="item-view-p">Item Unit Size: {{ this.unitSize }}</p>
@@ -26,6 +28,8 @@
 
       <div v-if="this.state == 1">
           <h1 class="item-view-title">{{ this.title }}</h1>
+        <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
+        <br>
         <p class="item-view-p">Bin:</p>
         <input v-model="this.updatedbinNumber" class="item-view-input" :placeholder="this.binNumber">
         <br>
@@ -56,6 +60,8 @@
         
       <div v-if="this.state == 2">
         <h1 class="item-view-title">{{ this.title }}</h1>
+        <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
+        <br>
         <p class="item-view-p">Bin: {{ this.binNumber }}</p>
         <br>
         <p class="item-view-p">Item Unit Size: {{ this.unitSize }}</p>
@@ -116,7 +122,7 @@ export default {
           updatedbinNumber: this.binNumber,
           updatedsoldPlatform: this.soldPlatform,
           updatedUnitSize: this.unitSize,
-          updatedShippingPrice: null,
+          updatedShippingPrice: this.shippingPrice,
 
           //Mark as Sold State
           markAsSoldSoldPrice: undefined,
