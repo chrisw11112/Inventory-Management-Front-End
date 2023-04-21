@@ -110,19 +110,18 @@ export default {
           soldDate: undefined,
           soldPlatform: undefined,
           unitSize: undefined,
-          shippingPrice: null,
+          shippingPrice: undefined,
           error: undefined,
           //0 = item view 1 = update view 2 = mark as sold
           state: 0,
 
           //Updated State
-          updatedTitle: this.title,
-          updatedPurchasePrice: this.purchasePrice,
-          updatedSoldPrice: this.soldPrice,
-          updatedbinNumber: this.binNumber,
-          updatedsoldPlatform: this.soldPlatform,
-          updatedUnitSize: this.unitSize,
-          updatedShippingPrice: this.shippingPrice,
+          updatedPurchasePrice: this.updatedPurchasePrice,
+          updatedSoldPrice: this.updatedSoldPrice,
+          updatedbinNumber: this.updatedbinNumber,
+          updatedsoldPlatform: this.updatedSoldPlatform,
+          updatedUnitSize: this.updatedUnitSize,
+          updatedShippingPrice: this.updatedShippingPrice,
 
           //Mark as Sold State
           markAsSoldSoldPrice: undefined,
@@ -160,6 +159,7 @@ export default {
           this.soldPlatform = result.soldPlatform;
           this.unitSize = result.size;
           this.shippingPrice = result.shippingPrice;
+          console.log(this.shippingPrice);
           break;
         case 401:
           try {
@@ -187,13 +187,13 @@ export default {
         body: 
         `{"itemID":${this.$route.params.id},
         "purchasePrice":${this.updatedPurchasePrice == undefined || '' ? this.purchasePrice : this.updatedPurchasePrice},
-        "title":"${this.updatedTitle  == undefined || '' ? this.title : this.updateTitle}",
+        "title":"${this.title}",
         "soldPrice":${this.updatedSoldPrice  == undefined || '' ? this.soldPrice : this.updatedSoldPrice},
         "binNumber":${this.updatedbinNumber  == undefined || '' ? this.binNumber : this.updatedbinNumber},
         "soldPlatform":"${this.updatedsoldPlatform  == undefined || '' ? this.soldPlatform : this.updatedSoldPlatform}",
         "size":${this.updatedUnitSize  == undefined || '' ? this.unitSize : this.updatedUnitSize},
         "sold":${this.sold},
-        "shippingCost":${this.shippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice}}`
+        "shippingCost":${this.updatedShippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice}}`
       };
       console.log(options.body);
       console.log(this.updatedTitle);
