@@ -159,7 +159,6 @@ export default {
           this.soldPlatform = result.soldPlatform;
           this.unitSize = result.size;
           this.shippingPrice = result.shippingPrice;
-          console.log(this.shippingPrice);
           break;
         case 401:
           try {
