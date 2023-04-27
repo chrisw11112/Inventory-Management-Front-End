@@ -5,7 +5,8 @@ export default createStore({
         return {
             isAuthorized: false,
             authToken: undefined,
-            url: process.env.VUE_APP_INVENTORYAPI
+            url: process.env.VUE_APP_INVENTORYAPI,
+            titleFilter: ''
         }
     },
     getters: {

@@ -3,7 +3,10 @@
         <NavBar/>
         <div class="container" >
             <div class="title-filter-container">
-                <input v-model="titleFilter" type="text" placeholder="Title" class="title-filter">
+                <form>
+                    <input v-model="titleFilter" type="text" placeholder="Title" class="title-filter">
+                    <input type="reset" value="x" @click="this.titleFilter = ''" class="title-filter-clear-btn">
+                </form>
             </div>
             <router-link to="/createcontainer" custom v-slot="{ navigate }">
                 <button @click="navigate" class="button new-item-button">New Bin</button>
@@ -29,6 +32,7 @@ import NavBar from '../components/NavBar.vue'
 
 export default {
   async beforeMount() {
+    this.titleFilter = store.state.titleFilter
     await this.getItems;
   },
   mounted() {
@@ -55,6 +59,7 @@ export default {
   },
   watch: {
     titleFilter: async function() {
+        store.state.titleFilter = this.titleFilter;
         this.currentPage = 1;
         await this.getItems;
     }
@@ -170,5 +175,11 @@ export default {
 }
 .notallowed {
     cursor: not-allowed;
+}
+.title-filter-clear-btn {
+    height: 1.8rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 2px;
 }
 </style>
