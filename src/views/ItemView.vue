@@ -75,9 +75,9 @@
       <br>
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
       <br>
-      <p class="item-view-p">Sold Price: {{ this.soldPrice }}</p>
-      <br>
       <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
+      <br>
+      <p class="item-view-p">Sold Price: {{ this.soldPrice }}</p>
       <input v-model="this.markAsSoldSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
       <br>
       <p class="item-view-p">Sold Platform:</p>
