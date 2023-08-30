@@ -11,6 +11,8 @@
         <br>
         <p class="item-view-p">COG: ${{ this.purchasePrice }}</p>
         <br>
+        <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
+        <br>
         <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
           <div v-if="this.sold">
             <p class="item-view-p">Sold Price: ${{ this.soldPrice }}</p>
@@ -40,6 +42,9 @@
         <input v-model="this.updatedPurchasePrice" class="item-view-input" :placeholder="this.purchasePrice">
         <br>
         <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
+        <br>
+        <p class="item-view-p">Ebay Item Id: ${{ this.shippingPrice }}</p>
+        <input v-model="this.updatedEbayItemId" class="item-view-input" :placeholder="this.ebayItemId">
           <div v-if="this.sold">
             <p class="item-view-p">Sold Price:</p>
             <input v-model="this.updatedSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
@@ -71,6 +76,8 @@
         <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
         <br>
         <p class="item-view-p">Sold Price: {{ this.soldPrice }}</p>
+        <br>
+        <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
         <input v-model="this.markAsSoldSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
         <br>
         <p class="item-view-p">Sold Platform:</p>
@@ -112,6 +119,7 @@ export default {
           unitSize: undefined,
           shippingPrice: undefined,
           error: undefined,
+          ebayItemId: undefined,
           //0 = item view 1 = update view 2 = mark as sold
           state: 0,
 
@@ -122,6 +130,7 @@ export default {
           updatedsoldPlatform: this.updatedSoldPlatform,
           updatedUnitSize: this.updatedUnitSize,
           updatedShippingPrice: this.updatedShippingPrice,
+          updatedEbayItemId: this.updatedEbayItemId,
 
           //Mark as Sold State
           markAsSoldSoldPrice: undefined,
@@ -159,6 +168,8 @@ export default {
           this.soldPlatform = result.soldPlatform;
           this.unitSize = result.size;
           this.shippingPrice = result.shippingPrice;
+          this.ebayItemId= result.ebayItemID;
+          console.log(this.ebayItemId);
           break;
         case 401:
           try {
@@ -192,10 +203,10 @@ export default {
         "soldPlatform":"${this.updatedsoldPlatform  == undefined || '' ? this.soldPlatform : this.updatedSoldPlatform}",
         "size":${this.updatedUnitSize  == undefined || '' ? this.unitSize : this.updatedUnitSize},
         "sold":${this.sold},
+        "ebayItemId":"${this.updatedEbayItemId  == undefined || '' ? this.ebayItemId : this.updatedEbayItemId}",
         "shippingCost":${this.updatedShippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice}}`
       };
-      console.log(options.body);
-      console.log(this.updatedTitle);
+
       let response;
       try {
         response = await fetch(`${this.$store.state.url}/item`, options);
