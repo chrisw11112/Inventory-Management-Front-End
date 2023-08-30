@@ -10,6 +10,7 @@
         <p class="variables">SKU: {{ itemID }}</p>
         <p v-if="soldDate" class="variables">Sold Date: {{ new Date(soldDate).toLocaleDateString() }}</p>
         <p v-if="soldPlatform" class="variables">Sold Platform: {{ soldPlatform }}</p>
+        <img class="item-img" v-if="pictureLink != null" v-bind:src="pictureLink">
     </div>
 </template>
 
@@ -24,7 +25,8 @@ export default {
     itemSizeUnits: Number,
     purchasePrice: Number,
     soldPlatform: String,
-    itemID: Number
+    itemID: Number,
+    pictureLink: String
   },
   methods: {
     goToIndividualItem() {
@@ -35,16 +37,26 @@ export default {
 </script>
 
 <style>
+.item-img {
+    margin-left: auto;
+    margin-right: 10px;
+    max-width: 100%;
+    max-height: 60%;
+    vertical-align: top;
+}
 .item-container {
     margin-left: auto;
     margin-right: auto;
     width: 60rem;
-    height: 10rem;
+    height: 15rem;
     border: 1px solid black;
     border-radius: 10px;
     background-color: lightgrey;
     box-shadow: 2px 2px grey;
     margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
 }
 .item-container:hover {
     box-shadow: 5px 5px darkgrey;
@@ -52,13 +64,12 @@ export default {
 }
 .title {
     padding-left: 1rem;
-    display: inline-block;
+    width: 100%;
 }
 .variables {
-    display: inline-block;
+    height: 20px;
     padding-left: 2rem;
     font-size: .85rem;
-    margin-top: .5rem;
     opacity: 80%;
 }
 .sold {
