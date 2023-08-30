@@ -17,7 +17,7 @@
             
             <CreateItem @cancel="this.hideCreateItem = true" @create="submitNewItem()" v-if="!this.hideCreateItem"/>
             <div v-for="item in items">
-                <item class="items" :title="item.title" :itemSizeUnits="item.size" :purchasePrice="item.purchasePrice" :binNumber="item.binNumber" :sold="item.sold" :itemID="item.itemID" :createDate="item.createDate" />
+                <item class="items" :title="item.title" :itemSizeUnits="item.size" :purchasePrice="item.purchasePrice" :binNumber="item.binNumber" :sold="item.sold" :itemID="item.itemID" :createDate="item.createDate" :pictureLink="item.pictureLink" />
             </div>    
         </div>
     </div>
