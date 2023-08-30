@@ -87,7 +87,6 @@ export default {
             case 200:
                 this.nextUrl = result.uri;
                 if(this.currentPage == 1) {
-                    console.log(result.items);
                     this.items = result.items;
                 }
                 else {
