@@ -7,6 +7,8 @@
         <input v-model="this.itemSizeUnits" class="inputs-create-item">
         <h4 class="input-titles">COG: </h4>
         <input v-model="this.purchasePrice" class="inputs-create-item">
+        <h4 class="input-titles">EbayItemID: </h4>
+        <input v-model="this.ebayItemID" class="inputs-create-item">
         <h4 v-if="this.itemSizeUnits != undefined && this.itemSizeUnits !='' && setBinNumber == undefined" class="input-titles">Bin: </h4>
         <AvailableBinDropDown class="inputs-create-item availableBins-input" @input="(bins) => this.availableBins = bins" v-if="this.itemSizeUnits != undefined && this.itemSizeUnits != '' && setBinNumber == undefined" :unitSize="this.itemSizeUnits"/>
         <button @click="addItem()" class="create-item-button create-new-item-button-succeed">Finish</button>
@@ -26,7 +28,8 @@ export default {
         itemSizeUnits: undefined,
         binNumber: undefined,
         error: undefined,
-        availableBins: undefined
+        availableBins: undefined,
+        ebayItemID: undefined
     } 
   },
   components: {
@@ -44,7 +47,7 @@ export default {
             'Content-Type': 'application/json',
             Authorization: `bearer ${this.$cookies.get('authToken')}`
         },
-        body: `{"purchasePrice":${this.purchasePrice},"title":"${this.title}","size":${this.itemSizeUnits}, "binNumber": ${this.setBinNumber == undefined ? this.availableBins : parseInt(this.setBinNumber)}}`
+        body: `{"purchasePrice":${this.purchasePrice},"title":"${this.title}","size":${this.itemSizeUnits}, "binNumber": ${this.setBinNumber == undefined ? this.availableBins : parseInt(this.setBinNumber)}, "ebayItemID":"${this.ebayItemID}"}`
         };
 
         let response;
@@ -83,7 +86,6 @@ export default {
 <style>
 /* styling for this comes from the Item component */
 .inputs-create-item {
-    display: inline;
     font-size: .85rem;
     margin-top: 5rem;
     width: 5rem;
@@ -94,12 +96,10 @@ export default {
     margin-bottom: 4rem;
 }
 .input-titles {
-    display: inline;
     margin-right: 1rem;
     margin-left: 1rem;
     margin-top: 4rem;
     height: 1rem;
-    margin-top: auto;
     margin-bottom: 4.3rem;
 }
 .create-item-title {
