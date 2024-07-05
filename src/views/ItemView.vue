@@ -9,7 +9,8 @@
       <p class="item-view-p">COG: ${{ this.purchasePrice }}</p>
       <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
-      <p v-if="this.weightInPounds" class="item-view-p">Weight In Pounds: {{ this.weightInPounds }}</p>
+      <p v-if="this.weightInPounds" class="item-view-p">Pounds: {{ this.weightInPounds }}</p>
+      <p v-if="this.weightInOunces" class="item-view-p">Ounces: {{ this.weightInOunces }}</p>
       <p v-if="this.length" class="item-view-p">Length: {{ this.length }}</p>
       <p v-if="this.width" class="item-view-p">Width: {{ this.width }}</p>
       <p v-if="this.height" class="item-view-p">Height: {{ this.height }}</p>
@@ -41,8 +42,9 @@
       <p class="item-view-p">Ebay Item Id: {{ this.shippingPrice }}
         <input v-model="this.updatedEbayItemId" class="item-view-input" :placeholder="this.ebayItemId">
       </p>
-      <p class="item-view-p">Weight In Pounds:
-        <input v-model="this.updatedWeightInPounds" class="item-view-input" :placeholder="this.weightInPounds ? weightInPounds : 0">
+      <p class="item-view-p">
+        Pounds: <input v-model="this.updatedWeightInPounds" class="item-view-input" :placeholder="this.weightInPounds ? weightInPounds : 0">
+        Ounces: <input v-model="this.updatedWeightInOunces" class="item-view-input" :placeholder="this.weightInOunces ? weightInOunces : 0">
       </p>
       <p class="item-view-p">Length:
         <input v-model="this.updatedLength" class="item-view-input" :placeholder="this.length ? length : 0">
@@ -80,6 +82,11 @@
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
       <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
       <p class="item-view-p">Sold Price: {{ this.soldPrice }}
+      <p v-if="this.weightInPounds" class="item-view-p">Pounds: {{ this.weightInPounds }}</p>
+      <p v-if="this.weightInOunces" class="item-view-p">Ounces: {{ this.weightInOunces }}</p>
+      <p v-if="this.length" class="item-view-p">Length: {{ this.length }}</p>
+      <p v-if="this.width" class="item-view-p">Width: {{ this.width }}</p>
+      <p v-if="this.height" class="item-view-p">Height: {{ this.height }}</p>
         <input v-model="this.markAsSoldSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
       </p>
       <p class="item-view-p">Sold Platform:
@@ -124,6 +131,7 @@ data() {
         error: undefined,
         ebayItemId: undefined,
         weightInPounds: 0,
+        weightInOunces: 0,
         length: 0,
         width: 0,
         height: 0,
@@ -139,6 +147,7 @@ data() {
         updatedShippingPrice: this.updatedShippingPrice,
         updatedEbayItemId: this.updatedEbayItemId,
         updatedWeightInPounds: this.updatedWeightInPounds,
+        updatedWeightInOunces: this.updatedWeightInOunces,
         updatedLength: this.updatedLength,
         updatedWidth: this.updatedWidth,
         updatedHeight: this.updatedHeight,
@@ -180,7 +189,8 @@ methods: {
         this.unitSize = result.size;
         this.shippingPrice = result.shippingPrice;
         this.ebayItemId= result.ebayItemID;
-        this.weightInPounds = result.weightInPounds;
+        this.weightInPounds = Math.floor(result.weightInPounds);
+        this.weightInOunces = result.weightInPounds ? 16 * (result.weightInPounds - Math.floor(result.weightInPounds)) : null,
         this.height = result.height;
         this.width = result.width;
         this.length = result.length;
@@ -201,7 +211,13 @@ methods: {
   },
   async updateItem() {
     this.error = undefined;
-
+    let pounds = 0.0;
+    if (this.updatedWeightInPounds) {
+      pounds += Math.floor(this.updatedWeightInPounds);
+    }
+    if (this.updatedWeightInOunces) {
+      pounds += this.updatedWeightInOunces / 16
+    }
     const options = {
       method: 'PUT',
       headers: {
@@ -220,7 +236,7 @@ methods: {
       "sold":${this.sold},
       "ebayItemId":"${this.updatedEbayItemId  == undefined || '' ? this.ebayItemId : this.updatedEbayItemId}",
       "shippingCost":${this.updatedShippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice},
-      "weightInPounds":${this.updatedWeightInPounds ? this.updatedWeightInPounds : this.weightInPounds},
+      "weightInPounds":${pounds ? pounds : this.weightInPounds },
       "length":${this.updatedLength ? this.updatedLength : this.length},
       "width":${this.updatedWidth ? this.updatedWidth : this.width},
       "height":${this.updatedHeight ? this.updatedHeight : this.height}
