@@ -10,7 +10,17 @@
         <button @click="$event => this.hideCreateItem = false" class="button new-item-button">New Item</button>
         <CreateItem :setBinNumber="this.$route.params.id" @cancel="this.hideCreateItem = true" @create="this.submitNewItem()" v-if="!this.hideCreateItem"/>
         <div v-for="item in shownItems">
-            <Item class="items" :title="item.title" :itemSizeUnits="item.size" :purchasePrice="item.purchasePrice" :binNumber="item.binNumber" :sold="item.sold" :itemID="item.itemID" :createDate="item.createDate" />
+            <Item class="items" :title="item.title" 
+            :itemSizeUnits="item.size" 
+            :purchasePrice="item.purchasePrice" 
+            :binNumber="item.binNumber" 
+            :sold="item.sold" 
+            :itemID="item.itemID" 
+            :createDate="item.createDate" 
+            :weightInPounds="item.weightInPounds"
+            :length="item.length"
+            :width="item.width"
+            :height="item.height" />
         </div>    
     </div>
 </template>

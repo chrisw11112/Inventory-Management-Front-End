@@ -4,24 +4,21 @@
     <div v-if="this.state == 0">
         <h1 class="item-view-title">{{ this.title }}</h1>
       <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
-      <br>
       <p class="item-view-p">Bin: {{ this.binNumber }}</p>
-      <br>
       <p class="item-view-p">Item Unit Size: {{ this.unitSize }}</p>
-      <br>
       <p class="item-view-p">COG: ${{ this.purchasePrice }}</p>
-      <br>
       <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
-      <br>
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
+      <p v-if="this.weightInPounds" class="item-view-p">Weight In Pounds: {{ this.weightInPounds }}</p>
+      <p v-if="this.length" class="item-view-p">Length: {{ this.length }}</p>
+      <p v-if="this.width" class="item-view-p">Width: {{ this.width }}</p>
+      <p v-if="this.height" class="item-view-p">Height: {{ this.height }}</p>
         <div v-if="this.sold">
           <p class="item-view-p">Sold Price: ${{ this.soldPrice }}</p>
-          <br>
           <p class="item-view-p">Sold Platform: {{ this.soldPlatform }}</p>
-          <br>
           <p class="item-view-p">Shipping Price: ${{ this.shippingPrice }}</p>
         </div>
-        <div style="margin-left: 15rem;">
+        <div class="buttons-container">
           <button @click="this.state = 2" class="item-view-button" v-if="!this.sold">Mark As Sold</button>
           <button v-if="this.state == 0" @click="this.state = 1" class="item-view-button">Update</button>
           <button @click="this.$router.push({ path: '/'});" class="item-view-button">Cancel</button>
@@ -31,33 +28,44 @@
     <div v-if="this.state == 1">
         <h1 class="item-view-title">{{ this.title }}</h1>
       <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
-      <br>
-      <p class="item-view-p">Bin:</p>
-      <input v-model="this.updatedbinNumber" class="item-view-input" :placeholder="this.binNumber">
-      <br>
-      <p class="item-view-p">Item Unit Size:</p>
-      <input v-model="this.updatedUnitSize" class="item-view-input" :placeholder="this.unitSize">
-      <br>
-      <p class="item-view-p">COG:</p>
-      <input v-model="this.updatedPurchasePrice" class="item-view-input" :placeholder="this.purchasePrice">
-      <br>
+      <p class="item-view-p">Bin:
+        <input v-model="this.updatedbinNumber" class="item-view-input" :placeholder="this.binNumber">
+      </p>
+      <p class="item-view-p">Item Unit Size:
+        <input v-model="this.updatedUnitSize" class="item-view-input" :placeholder="this.unitSize">
+      </p>
+      <p class="item-view-p">COG:
+        <input v-model="this.updatedPurchasePrice" class="item-view-input" :placeholder="this.purchasePrice">
+      </p>
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
-      <br>
-      <p class="item-view-p">Ebay Item Id: ${{ this.shippingPrice }}</p>
-      <input v-model="this.updatedEbayItemId" class="item-view-input" :placeholder="this.ebayItemId">
+      <p class="item-view-p">Ebay Item Id: {{ this.shippingPrice }}
+        <input v-model="this.updatedEbayItemId" class="item-view-input" :placeholder="this.ebayItemId">
+      </p>
+      <p class="item-view-p">Weight In Pounds:
+        <input v-model="this.updatedWeightInPounds" class="item-view-input" :placeholder="this.weightInPounds ? weightInPounds : 0">
+      </p>
+      <p class="item-view-p">Length:
+        <input v-model="this.updatedLength" class="item-view-input" :placeholder="this.length ? length : 0">
+      </p>
+      <p class="item-view-p">Width:
+        <input v-model="this.updatedWidth" class="item-view-input" :placeholder="this.width ? width : 0">
+      </p>
+      <p class="item-view-p">Height
+        <input v-model="this.updatedHeight" class="item-view-input" :placeholder="this.height ? weightInPounds : 0">
+      </p>
         <div v-if="this.sold">
-          <p class="item-view-p">Sold Price:</p>
-          <input v-model="this.updatedSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
-          <br>
-          <p class="item-view-p">Sold Platform:</p>
-          <DropDown :value="this.soldPlatform" @input="(platform) => this.updatedsoldPlatform = platform"/>
-          <br>
+          <p class="item-view-p">Sold Price:
+            <input v-model="this.updatedSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
+          </p>
+          <p class="item-view-p">Sold Platform:
+            <DropDown :value="this.soldPlatform" @input="(platform) => this.updatedsoldPlatform = platform"/>
+          </p>
           <p class="item-view-p">Sold Date: {{ new Date(new Date(this.soldDate).toDateString()).toLocaleDateString() }}</p>
-          <br>
-          <p class="item-view-p">Shipping Price:</p>
-          <input v-model="this.updatedShippingPrice" class="item-view-input" :placeholder="this.shippingPrice">          
+          <p class="item-view-p">Shipping Price:
+            <input v-model="this.updatedShippingPrice" class="item-view-input" :placeholder="this.shippingPrice">
+          </p>          
         </div>
-        <div style="margin-left: 15rem;">
+        <div class="buttons-container">
           <button @click="updateItem()" class="item-view-button">Finish</button>
           <button @click="this.state = 0" class="item-view-button">Cancel</button>
         </div>  
@@ -66,26 +74,21 @@
     <div v-if="this.state == 2">
       <h1 class="item-view-title">{{ this.title }}</h1>
       <p class="item-view-p">SKU: {{ this.$route.params.id }}</p>
-      <br>
       <p class="item-view-p">Bin: {{ this.binNumber }}</p>
-      <br>
       <p class="item-view-p">Item Unit Size: {{ this.unitSize }}</p>
-      <br>
       <p class="item-view-p">COG: {{ this.purchasePrice }}</p>
-      <br>
       <p class="item-view-p">Create Time: {{ new Date(new Date(this.createDate).toDateString()).toLocaleDateString() }}</p>
-      <br>
       <p class="item-view-p">Ebay Item Id: {{ this.ebayItemId }}</p>
-      <br>
-      <p class="item-view-p">Sold Price: {{ this.soldPrice }}</p>
-      <input v-model="this.markAsSoldSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
-      <br>
-      <p class="item-view-p">Sold Platform:</p>
-      <DropDown :value="this.soldPlatform" @input="(platform) => this.markAsSoldSoldPlatforum = platform"/>
-      <br>
-      <p class="item-view-p">Shipping Price:</p>
-      <input v-model="this.markAsSoldShippingPrice" class="item-view-input" :placeholder="this.shippingPrice">
-      <div style="margin-left: 15rem;">
+      <p class="item-view-p">Sold Price: {{ this.soldPrice }}
+        <input v-model="this.markAsSoldSoldPrice" class="item-view-input" :placeholder="this.soldPrice">
+      </p>
+      <p class="item-view-p">Sold Platform:
+        <DropDown :value="this.soldPlatform" @input="(platform) => this.markAsSoldSoldPlatforum = platform"/>
+      </p>
+      <p class="item-view-p">Shipping Price:
+        <input v-model="this.markAsSoldShippingPrice" class="item-view-input" :placeholder="this.shippingPrice">
+      </p>
+      <div class="buttons-container">
         <button @click="markAsSold()" class="item-view-button">Finish</button>
         <button @click="this.state = 0" class="item-view-button">Cancel</button>
       </div>
@@ -120,6 +123,10 @@ data() {
         shippingPrice: undefined,
         error: undefined,
         ebayItemId: undefined,
+        weightInPounds: 0,
+        length: 0,
+        width: 0,
+        height: 0,
         //0 = item view 1 = update view 2 = mark as sold
         state: 0,
 
@@ -131,6 +138,10 @@ data() {
         updatedUnitSize: this.updatedUnitSize,
         updatedShippingPrice: this.updatedShippingPrice,
         updatedEbayItemId: this.updatedEbayItemId,
+        updatedWeightInPounds: this.updatedWeightInPounds,
+        updatedLength: this.updatedLength,
+        updatedWidth: this.updatedWidth,
+        updatedHeight: this.updatedHeight,
 
         //Mark as Sold State
         markAsSoldSoldPrice: undefined,
@@ -169,7 +180,10 @@ methods: {
         this.unitSize = result.size;
         this.shippingPrice = result.shippingPrice;
         this.ebayItemId= result.ebayItemID;
-        console.log(this.ebayItemId);
+        this.weightInPounds = result.weightInPounds;
+        this.height = result.height;
+        this.width = result.width;
+        this.length = result.length;
         break;
       case 401:
         try {
@@ -195,7 +209,8 @@ methods: {
         Authorization: `bearer ${this.$cookies.get('authToken')}`
       },
       body: 
-      `{"itemID":${this.$route.params.id},
+      `{
+      "itemID":${this.$route.params.id},
       "purchasePrice":${this.updatedPurchasePrice == undefined || '' ? this.purchasePrice : this.updatedPurchasePrice},
       "title":"${this.title}",
       "soldPrice":${this.updatedSoldPrice  == undefined || '' ? this.soldPrice : this.updatedSoldPrice},
@@ -204,7 +219,12 @@ methods: {
       "size":${this.updatedUnitSize  == undefined || '' ? this.unitSize : this.updatedUnitSize},
       "sold":${this.sold},
       "ebayItemId":"${this.updatedEbayItemId  == undefined || '' ? this.ebayItemId : this.updatedEbayItemId}",
-      "shippingCost":${this.updatedShippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice}}`
+      "shippingCost":${this.updatedShippingPrice  == undefined || '' ? this.shippingPrice : this.updatedShippingPrice},
+      "weightInPounds":${this.updatedWeightInPounds ? this.updatedWeightInPounds : this.weightInPounds},
+      "length":${this.updatedLength ? this.updatedLength : this.length},
+      "width":${this.updatedWidth ? this.updatedWidth : this.width},
+      "height":${this.updatedHeight ? this.updatedHeight : this.height}
+      }`
     };
 
     let response;
@@ -283,43 +303,50 @@ methods: {
 }
 </script>
 <style>
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 .item-view-div {
-width: 50rem;
-background-color: #FAF9F6;
-box-shadow: 2px 2px darkgrey;
-border: 1px solid black;
-border-radius: 10px;
-margin-left: auto;
-margin-right: auto;
-margin-top: 2rem;
+  width: 50rem;
+  background-color: #FAF9F6;
+  box-shadow: 2px 2px darkgrey;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  display: flex;
 }
 .item-view-p {
-margin-left: 2rem;
-display: inline-block;
+  margin-left: 2rem;
+  display: inline-block;
+  width: 100%;
 }
 .item-view-input {
-margin-left: 1rem;
-border-radius: 5px;
+  margin-left: 1rem;
+  border-radius: 5px;
 }
 .item-view-title {
-margin-left: auto;
-margin-right: auto;
-width: 20rem;
-margin-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20rem;
+  margin-bottom: 2rem;
 }
 .item-view-button {
-margin-right: 2rem;
-border-radius: 5px;
-height: 3rem;
-width: 8rem;
-background-color: #3E54AC;
-color: white;
-margin-bottom: 2rem;
-opacity: 95%;
-border: 1px solid black;
+  margin-right: 2rem;
+  border-radius: 5px;
+  height: 3rem;
+  width: 8rem;
+  background-color: #3E54AC;
+  color: white;
+  margin-bottom: 2rem;
+  opacity: 95%;
+  border: 1px solid black;
 }
 .item-view-button:hover {
-cursor: pointer;
+  cursor: pointer;
 }
 
 </style>
