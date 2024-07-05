@@ -11,7 +11,8 @@
             <p class="variables">SKU: {{ itemID }}</p>
             <p v-if="soldDate" class="variables">Sold Date: {{ new Date(soldDate).toLocaleDateString() }}</p>
             <p v-if="soldPlatform" class="variables">Sold Platform: {{ soldPlatform }}</p>
-            <p v-if="weightInPounds" class="variables">Weight: {{ weightInPounds }}</p>
+            <p v-if="weightInPounds" class="variables">Pounds: {{ Math.floor(weightInPounds) }}</p>
+            <p v-if="weightInOunces" class="variables">Ounces: {{ weightInOunces }}</p>
             <p v-if="length" class="variables">Length: {{ length }}</p>
             <p v-if="width" class="variables">Width: {{ width }}</p>
             <p v-if="height" class="variables">Height: {{ height }}</p>
@@ -39,6 +40,11 @@ export default {
     length: Number,
     width: Number,
     height: Number
+  },
+  data () {
+    return {
+        weightInOunces: 16 * (this.weightInPounds - Math.floor(this.weightInPounds))
+    }
   },
   methods: {
     goToIndividualItem() {
