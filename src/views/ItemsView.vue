@@ -2,6 +2,10 @@
     <div ref="container">
         <NavBar/>
         <div class="container" >
+            <div class="input-container">
+                <input type="checkbox" id="onlyItems" v-model="onlyItemsWithoutABin">
+                <label for="onlyItems">Only Items Without a Bin</label>
+            </div>
             <div class="title-filter-container">
                 <form>
                     <input v-model="titleFilter" type="text" placeholder="Title" class="title-filter">
@@ -60,7 +64,8 @@ export default {
         nextUrl: undefined,
         errorMessage: undefined,
         hideCreateItem: true,
-        refreshKey: 0
+        refreshKey: 0,
+        onlyItemsWithoutABin: false
     }
   },
   components: {
@@ -73,6 +78,10 @@ export default {
         store.state.titleFilter = this.titleFilter;
         this.currentPage = 1;
         await this.getItems;
+    },
+    onlyItemsWithoutABin: async function() {
+      this.refreshKey++;
+      await this.getItems;
     }
   },
   computed: {
@@ -88,7 +97,7 @@ export default {
         let response;
         let result;
         try {
-            response = await fetch(`${store.state.url}/item/${this.titleFilter == '' ? '%20' : this.titleFilter}?pageSize=30&pageNumber=${this.currentPage}`, options);
+            response = await fetch(`${store.state.url}/item/${this.titleFilter == '' ? '%20' : this.titleFilter}?pageSize=30&pageNumber=${this.currentPage}&onlyIncludeItemsWithoutBins=${this.onlyItemsWithoutABin}`, options);
             result = await response.json();
         }
         catch (err) {
@@ -134,6 +143,10 @@ export default {
 }
 </script>
 <style>
+.input-container {
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
 .title-filter-container {
     display: flex;
     align-items: flex-end;
