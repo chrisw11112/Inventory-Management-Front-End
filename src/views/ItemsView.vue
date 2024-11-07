@@ -1,38 +1,40 @@
 <template>
     <div ref="container">
         <NavBar/>
-        <div class="container" >
+        <div class="container">
             <div class="input-container">
                 <input type="checkbox" id="onlyItems" v-model="onlyItemsWithoutABin">
                 <label for="onlyItems">Only Items Without a Bin</label>
             </div>
             <div class="title-filter-container">
-                <form>
-                    <input v-model="titleFilter" type="text" placeholder="Title" class="title-filter">
-                    <input type="reset" value="x" @click="this.titleFilter = ''" class="title-filter-clear-btn">
+                <form @submit.prevent="getItems">
+                    <input v-model="titleFilter" type="text" placeholder="Title" class="title-filter" @keydown.enter="getItems">
+                    <input type="reset" value="x" @click="resetFilter" class="title-filter-clear-btn">
                 </form>
             </div>
             <router-link to="/createcontainer" custom v-slot="{ navigate }">
                 <button @click="navigate" class="button new-item-button">New Bin</button>
             </router-link>
-                <button @click="$event => this.hideCreateItem = false" class="button new-item-button">New Item</button>
+            <button @click="hideCreateItem = false" class="button new-item-button">New Item</button>
 
-            <h3 class="error-message" v-if="errorMessage != undefined" >{{ this.errorMessage }}</h3>
+            <h3 class="error-message" v-if="errorMessage">{{ errorMessage }}</h3>
             
-            <CreateItem @cancel="this.hideCreateItem = true" @create="submitNewItem()" v-if="!this.hideCreateItem"/>
-            <div v-for="item in items">
-                <item
-                :title="item.title" 
-                :itemSizeUnits="item.size" 
-                :purchasePrice="item.purchasePrice" 
-                :binNumber="item.binNumber" 
-                :sold="item.sold" :itemID="item.itemID" 
-                :createDate="item.createDate" 
-                :pictureLink="item.pictureLink"
-                :weightInPounds="item.weightInPounds"
-                :length="item.length"
-                :width="item.width"
-                :height="item.height" />
+            <CreateItem @cancel="hideCreateItem = true" @create="submitNewItem" v-if="!hideCreateItem"/>
+            <div v-for="item in items" :key="item.itemID">
+                <Item
+                    :title="item.title"
+                    :itemSizeUnits="item.size"
+                    :purchasePrice="item.purchasePrice"
+                    :binNumber="item.binNumber"
+                    :sold="item.sold"
+                    :itemID="item.itemID"
+                    :createDate="item.createDate"
+                    :pictureLink="item.pictureLink"
+                    :weightInPounds="item.weightInPounds"
+                    :length="item.length"
+                    :width="item.width"
+                    :height="item.height"
+                />
             </div>    
         </div>
     </div>
@@ -47,25 +49,27 @@ import NavBar from '../components/NavBar.vue'
 
 export default {
   async beforeMount() {
-    this.titleFilter = store.state.titleFilter
-    await this.getItems;
+    this.titleFilter = store.state.titleFilter;
+    await this.getItems();
   },
   mounted() {
     window.addEventListener('wheel', this.scroll);
   },
   unmounted() {
+    store.state.itemsWithoutBin = this.onlyItemsWithoutABin;
+    store.state.titleFilter = this.titleFilter;
     window.removeEventListener('wheel', this.scroll);
   },
   data() {
     return {
-        titleFilter: '',
-        currentPage: 1,
-        items: undefined,
-        nextUrl: undefined,
-        errorMessage: undefined,
-        hideCreateItem: true,
-        refreshKey: 0,
-        onlyItemsWithoutABin: false
+      titleFilter: '',
+      currentPage: 1,
+      items: undefined,
+      nextUrl: undefined,
+      errorMessage: undefined,
+      hideCreateItem: true,
+      refreshKey: 0,
+      onlyItemsWithoutABin: store.state.itemsWithoutBin,
     }
   },
   components: {
@@ -74,70 +78,67 @@ export default {
     NavBar
   },
   watch: {
-    titleFilter: async function() {
-        store.state.titleFilter = this.titleFilter;
-        this.currentPage = 1;
-        await this.getItems;
-    },
-    onlyItemsWithoutABin: async function() {
+    onlyItemsWithoutABin: function() {
       this.refreshKey++;
-      await this.getItems;
+      this.getItems();
     }
   },
-  computed: {
+  methods: {
+    async resetFilter() {
+        this.titleFilter = ''
+        this.getItems()
+    },
     async getItems() {
-        this.refreshKey;
-        this.errorMessage = undefined;
-        const options = {
+      this.refreshKey;
+      this.errorMessage = undefined;
+      const options = {
         method: 'GET',
         headers: {
-            Authorization: `bearer ${this.$cookies.get('authToken')}`
-            }
-        };
-        let response;
-        let result;
-        try {
-            response = await fetch(`${store.state.url}/item/${this.titleFilter == '' ? '%20' : this.titleFilter}?pageSize=30&pageNumber=${this.currentPage}&onlyIncludeItemsWithoutBins=${this.onlyItemsWithoutABin}`, options);
-            result = await response.json();
+          Authorization: `bearer ${this.$cookies.get('authToken')}`
         }
-        catch (err) {
-            this.errorMessage = "Unknown Error";
-        }
-        switch (response.status) {
-            case 200:
-                this.nextUrl = result.uri;
-                if(this.currentPage == 1) {
-                    this.items = result.items;
-                }
-                else {
-                    this.items.push(...result.items);
-                }
-                break;
-            case 401: 
-                try {
-                    this.$cookies.remove("authToken");
-                }
-                catch{}
-                router.push({ path: '/login'});
-            case 400:
-                this.items = undefined;
-                this.errorMessage = "No Matching Results With Given Title Found";
-        }
-    }   
-  },
-  methods: {
-    async submitNewItem() {
-        this.hideCreateItem = true;
-        this.refreshKey++;
-        await this.getItems;
+      };
+      let response;
+      let result;
+      try {
+        response = await fetch(`${store.state.url}/item/${this.titleFilter == '' ? '%20' : this.titleFilter}?pageSize=30&pageNumber=${this.currentPage}&onlyIncludeItemsWithoutBins=${this.onlyItemsWithoutABin}`, options);
+        result = await response.json();
+      }
+      catch (err) {
+        this.errorMessage = "Unknown Error";
+      }
+      switch (response.status) {
+        case 200:
+          this.nextUrl = result.uri;
+          if (this.currentPage === 1) {
+            this.items = result.items;
+          } else {
+            this.items.push(...result.items);
+          }
+          break;
+        case 401:
+          try {
+            this.$cookies.remove("authToken");
+          } catch {}
+          router.push({ path: '/login' });
+          break;
+        case 400:
+          this.items = undefined;
+          this.errorMessage = "No Matching Results With Given Title Found";
+          break;
+      }
     },
-    async scroll () {
-            if (this.$refs.container.offsetHeight - window.pageYOffset < 1000 && this.items.length > 0 && this.nextUrl != null) {
-                window.removeEventListener('wheel', this.scroll);
-                this.currentPage++;
-                await this.getItems;
-                window.addEventListener('wheel', this.scroll);
-            }
+    async submitNewItem() {
+      this.hideCreateItem = true;
+      this.refreshKey++;
+      await this.getItems();
+    },
+    async scroll() {
+      if (this.$refs.container.offsetHeight - window.pageYOffset < 1000 && this.items.length > 0 && this.nextUrl != null) {
+        window.removeEventListener('wheel', this.scroll);
+        this.currentPage++;
+        await this.getItems();
+        window.addEventListener('wheel', this.scroll);
+      }
     }
   }
 }
