@@ -58,5 +58,5 @@ jobs:
             --name $(echo $IMAGE_NAME) \
             --net=bridge \
             -p 80:80 \
-            -p 8080:8080
+            -p 8080:8080 \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
