@@ -159,6 +159,9 @@ data() {
     }
 },
 methods: {
+  escapeQuotes(str) {
+  return str.replace(/"/g, '\\"');
+},
   async getItem() {
     this.error = undefined;
     const options = {
@@ -180,7 +183,7 @@ methods: {
         result = await response.json();
         this.purchasePrice = result.purchasePrice;
         this.sold = result.sold;
-        this.title = result.title;
+        this.title = this.escapeQuotes(result.title);
         this.soldPrice = result.soldPrice;
         this.binNumber = result.binNumber;
         this.createDate = new Date(result.createDate);
