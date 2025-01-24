@@ -183,7 +183,7 @@ methods: {
         result = await response.json();
         this.purchasePrice = result.purchasePrice;
         this.sold = result.sold;
-        this.title = this.escapeQuotes(result.title);
+        this.title = result.title;
         this.soldPrice = result.soldPrice;
         this.binNumber = result.binNumber;
         this.createDate = new Date(result.createDate);
@@ -231,7 +231,7 @@ methods: {
       `{
       "itemID":${this.$route.params.id},
       "purchasePrice":${this.updatedPurchasePrice == undefined || '' ? this.purchasePrice : this.updatedPurchasePrice},
-      "title":"${this.title}",
+      "title":"${this.escapeQuotes(this.title)}",
       "soldPrice":${this.updatedSoldPrice  == undefined || '' ? this.soldPrice : this.updatedSoldPrice},
       "binNumber":${this.updatedbinNumber  == undefined || '' ? this.binNumber : this.updatedbinNumber},
       "soldPlatform":"${this.updatedsoldPlatform  == undefined || '' ? this.soldPlatform : this.updatedSoldPlatform}",
